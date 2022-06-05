@@ -1,0 +1,237 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+const int r = 20, c = 5;
+
+void showCommands() {
+	cout << "(1) Транспонирование матрицы\n";
+	cout << "(2) Сложение с числом всех элементов матрицы \n";
+	cout << "(3) Умножение матрицы на число\n";
+	cout << "(4) Сложение матриц\n";
+	cout << "(5) Вычитание матриц\n";
+	cout << "(6) Умножение матриц\n\n";
+	cout << "(0) Завершение программы\n";
+};
+class Matrix {
+private:
+	int row, col;
+public:
+	float** m; 
+	Matrix() //конструктор по умолчанию
+	{
+		row = col = 0;
+		m = nullptr;
+	}
+	Matrix(int _row, int _col) { //конструктор с параметрами 
+		col = _col;
+		row = _row;
+		m = (float**) new float* [row];
+		for (int i = 0; i < row; i++) {
+			m[i] = new float[col];
+		}
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				m[i][j] = 0;
+			}
+		}
+	};
+	int getRow() { //геттер для row
+		return row;
+	}
+	int getCol() { //геттер для col
+		return col;
+	}
+	void DisplayMatrix() { //метод, используемый для отображения матрицы
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				cout << setw(c) << m[i][j];
+			}
+			cout << "\n\n";
+		}
+	};
+	void SelfFilling() { //самостоятельное заполнение матрицы
+		cout << "\nЗаполните матрицу размером " << row << " х " << col << ": \n";
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				cin >> m[i][j];
+			}
+		}
+	};
+	void Transposition() { 
+		cout << "\nТранспонированная матрица: \n";
+		for (int i = 0; i < col; i++) {
+			for (int j = 0; j < row; j++) {
+				cout << setw(c) << m[j][i];
+			}
+			cout << "\n\n";
+		}
+	}
+	void addIntegersNumber() {
+		cout << "\nВведите число: \n";
+		int number;
+		cin >> number;
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				m[i][j] = m[i][j] + number;
+			}
+		}
+		cout << "Полученная матрица: \n\n";
+		DisplayMatrix();
+	};
+	void multyNumber() {
+		cout << "\nВведите число: \n";
+		int number;
+		cin >> number;
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				m[i][j] = m[i][j] * number;
+			}
+		}
+		cout << "Полученная матрица: \n\n";
+		DisplayMatrix();
+	};
+	void addictionMatrix(Matrix _Second) {
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				m[i][j] = m[i][j] + _Second.m[i][j];
+			}
+		}
+		DisplayMatrix();
+	};
+	void subtractionMatrix(Matrix _Second) {
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				m[i][j] = m[i][j] - _Second.m[i][j];
+			}
+		}
+		DisplayMatrix();
+	};
+	void MultiplierMatrix(Matrix _First, Matrix _Second) {
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				for (int q = 0; q < _First.getCol(); q++) {
+					m[i][j] = m[i][j] + (_First.m[i][q] * _Second.m[q][j]);
+				}
+			}
+		}
+		DisplayMatrix();
+	};
+};
+int main() {
+	setlocale(LC_ALL, "Russian");
+	int row, col;
+	int command = -1;
+	showCommands();
+	while (command != 0) {
+		cout << "Выберите команду: \n";
+		cin >> command;
+		switch (command) {
+		case 1: { //транспонирование
+			cout << "Введите размер матрицы: \n";
+			int row, col;
+			cin >> row >> col;
+			Matrix First(row, col);
+			First.SelfFilling();
+			cout << "Введенная матрица: \n\n";
+			First.DisplayMatrix();
+			First.Transposition();
+		}
+			  break;
+		case 2: { //Сложение числа с матрицой 
+			cout << "Введите размер матрицы: \n";
+			int row, col;
+			cin >> row >> col;
+			Matrix First(row, col);
+			First.SelfFilling();
+			cout << "Введенная матрица: \n\n";
+			First.DisplayMatrix();
+			First.addIntegersNumber();
+		}
+			  break;
+		case 3: { //Умножение матрицы на число
+			cout << "Введите размер матрицы: \n";
+			int row, col;
+			cin >> row >> col;
+			Matrix First(row, col);
+			First.SelfFilling();
+			cout << "Введенная матрица: \n\n";
+			First.DisplayMatrix();
+			First.multyNumber();
+		}
+			  break;
+
+		case 4: { //Сложение матриц
+			cout << "\nПояснение: складывать можно только ";
+			cout << "матрицы с одинаковой размерностью\n";
+			cout << "Введите размер для обеих матриц: \n";
+			int row, col;
+			cin >> row >> col;
+			Matrix First(row, col);
+			Matrix Second(row, col);
+			First.SelfFilling();
+			Second.SelfFilling();
+			cout << "\nВведенные матрицы: \n";
+			First.DisplayMatrix();
+			cout << endl;
+			Second.DisplayMatrix();
+			cout << "\nПолученная матрица: \n";
+			First.addictionMatrix(Second);
+		}
+			  break;
+		case 5: { //Вычитание матриц
+			cout << "\nПояснение: вычитать можно только ";
+			cout << "матрицы с одинаковой размерностью\n";
+			cout << "Введите размер для обеих матриц: \n";
+			int row, col;
+			cin >> row >> col;
+			Matrix First(row, col);
+			Matrix Second(row, col);
+			First.SelfFilling();
+			Second.SelfFilling();
+			cout << "\nВведенные матрицы: \n";
+			First.DisplayMatrix();
+			cout << endl;
+			Second.DisplayMatrix();
+			cout << "\nПолученная матрица: \n";
+			First.subtractionMatrix(Second);
+		}
+			  break;
+		case 6: { //Умножение матриц
+			cout << "\nПояснение: умножать можно только ";
+			cout << "согласованые матрицы (количество столбцов ";
+			cout << "первой матрицы равно количеству ";
+			cout << "строк второй \n";
+			cout << "Введите размер первой матрицы: \n";
+			int row, col;
+			cin >> row >> col;
+			Matrix First(row, col);
+			cout << "Введите размер второй матрицы: \n";
+			cin >> row >> col;
+			Matrix Second(row, col);
+			if (First.getCol() == Second.getRow()) {
+				First.SelfFilling();
+				Second.SelfFilling();
+				cout << "\nВведенные матрицы: \n";
+				First.DisplayMatrix();
+				cout << endl;
+				Second.DisplayMatrix();
+				Matrix Final(First.getRow(), Second.getCol());
+				cout << "\nПолученная матрица: \n";
+				Final.MultiplierMatrix(First, Second);
+			}
+			else cout << "\nВыбранные размеры матриц не являются согласоваными. ";
+		}
+			  break;
+		case 7: { //список команд
+			showCommands();
+		}
+			  break;
+		case 0: { //список команд
+			command = 0;
+		}
+		}
+		if (command != 0) cout << "(7) Список команд\n\n";
+	}
+}
